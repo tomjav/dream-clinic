@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.tgrzybowski.dreamclinic.employee.doctor.api.DoctorDto;
+import pl.tgrzybowski.dreamclinic.employee.doctor.services.DoctorService;
 
 import java.util.List;
 

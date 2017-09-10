@@ -1,11 +1,10 @@
 package pl.tgrzybowski.dreamclinic.employee.doctor.data;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import pl.tgrzybowski.dreamclinic.employee.availability.data.AvailabilityDay;
 import pl.tgrzybowski.dreamclinic.shared.PersonalData;
 
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 @Entity
 public class Doctor {

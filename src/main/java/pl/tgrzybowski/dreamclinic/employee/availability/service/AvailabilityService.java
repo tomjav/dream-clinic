@@ -1,7 +1,10 @@
 package pl.tgrzybowski.dreamclinic.employee.availability.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.tgrzybowski.dreamclinic.employee.availability.api.WorkingDayDto;
+import pl.tgrzybowski.dreamclinic.employee.availability.data.AvailabilityDay;
+import pl.tgrzybowski.dreamclinic.employee.availability.data.AvailabilityRespository;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -11,7 +14,15 @@ import java.util.List;
 @Service
 public class AvailabilityService {
 
-    public List<WorkingDayDto> getDoctorAvailability(Long doctorId, Integer year, Integer month) {
+    @Autowired
+    private AvailabilityRespository availabilityRespository;
+
+    public List<AvailabilityDay> getAvailabilityObjects(Long doctorId, Integer month){
+        List<AvailabilityDay> availabilityDays = availabilityRespository.findAvailabilityDaysByDoctorId(doctorId, month);
+        return availabilityDays;
+    }
+
+    public List<WorkingDayDto> getDoctorAvailabilityCalendar(Long doctorId, Integer year, Integer month) {
         LocalDate calendar = LocalDate.of(year, month, 1);
         boolean leapYear = calendar.isLeapYear();
         int daysInMonthAmount = calendar.getMonth().length(leapYear);
