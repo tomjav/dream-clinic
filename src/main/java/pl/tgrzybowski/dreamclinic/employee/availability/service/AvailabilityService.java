@@ -2,23 +2,50 @@ package pl.tgrzybowski.dreamclinic.employee.availability.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pl.tgrzybowski.dreamclinic.employee.availability.api.HourStatus;
 import pl.tgrzybowski.dreamclinic.employee.availability.api.WorkingDayDto;
-import pl.tgrzybowski.dreamclinic.employee.availability.data.AvailabilityDay;
-import pl.tgrzybowski.dreamclinic.employee.availability.data.AvailabilityRespository;
+import pl.tgrzybowski.dreamclinic.employee.availability.api.WorkingHour;
+import pl.tgrzybowski.dreamclinic.employee.availability.data.AvailabilityDayRespository;
+import pl.tgrzybowski.dreamclinic.employee.availability.data.AvailabilityHours;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AvailabilityService {
 
     @Autowired
-    private AvailabilityRespository availabilityRespository;
+    private AvailabilityDayRespository availabilityRespository;
 
-    public List<AvailabilityDay> getAvailabilityObjects(Long doctorId, Integer month){
-        List<AvailabilityDay> availabilityDays = availabilityRespository.findAvailabilityDaysByDoctorId(doctorId, month);
+    @Autowired
+    private DefaultAvailabilityService defaultAvailabilityService;
+
+    public List<WorkingHour> getWorkingHoursList(Long doctorId, Date date) {
+        List<AvailabilityHours> workingHours = availabilityRespository.getWorkingHours(date);
+
+        List<WorkingHour> defaultWorkingHours = defaultAvailabilityService.getDefaultWorkingHours();
+
+        List<WorkingHour> urgentHours =
+                workingHours.stream().map(e -> new WorkingHour(e.getHourFrom(), e.getHourTo(), HourStatus.HOUR_OFF)).collect(Collectors.toList());
+
+        List<WorkingHour> mergedHours = defaultWorkingHours.stream().filter(e -> urgentHours.stream().noneMatch(p -> e.getFrom().equals(p.getFrom()))).collect(Collectors.toList());
+
+        mergedHours.addAll(urgentHours);
+        mergedHours.sort((e, p) -> {
+            if (e.getFrom().equals(p.getFrom())) return 0;
+            else if (e.getFrom() > p.getFrom()) return 1;
+            return -1;
+        });
+        return mergedHours;
+    }
+
+
+    public List<WorkingHour> getAvailabilityObjects(Long doctorId, Integer month) {
+        List<WorkingHour> availabilityDays = availabilityRespository.zz(doctorId);
         return availabilityDays;
     }
 
@@ -58,7 +85,7 @@ public class AvailabilityService {
                 workingDayDto.setCurrentMonth(currentMonth);
 
                 int dayOfweekArrayIndex = (firstDayOfWeekInMonthId + dayIdCounter - 1) % (dayOfWeeks.length);
-                workingDayDto.setDayOfWeek(dayOfWeeks[dayOfweekArrayIndex]);
+                workingDayDto.setDayOfWeek(dayOfweekArrayIndex);
                 availabilityDays.add(workingDayDto);
             }
             firstWeek = false;
@@ -71,7 +98,7 @@ public class AvailabilityService {
         for (int i = 0; i < missedDayAmount; i++) {
             WorkingDayDto day = new WorkingDayDto();
             day.setCurrentMonth(false);
-            day.setDayOfWeek(dayOfWeeks[i]);
+            day.setDayOfWeek(i);
             day.setDoctorAvailable(false);
             missedDays.add(day);
         }
