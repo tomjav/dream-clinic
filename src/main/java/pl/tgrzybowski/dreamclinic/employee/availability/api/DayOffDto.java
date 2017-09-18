@@ -6,6 +6,7 @@ import java.util.Date;
 
 @Data
 public class DayOffDto {
-    private Integer hourId;
+    Integer hourFrom;
+    Integer hourTo;
     private Date date;
 }

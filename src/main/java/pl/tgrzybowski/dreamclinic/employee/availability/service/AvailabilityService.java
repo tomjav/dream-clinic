@@ -2,6 +2,7 @@ package pl.tgrzybowski.dreamclinic.employee.availability.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pl.tgrzybowski.dreamclinic.common.DateUtil;
 import pl.tgrzybowski.dreamclinic.employee.availability.api.HourStatus;
 import pl.tgrzybowski.dreamclinic.employee.availability.api.WorkingDayDto;
 import pl.tgrzybowski.dreamclinic.employee.availability.api.WorkingHour;
@@ -118,15 +119,16 @@ public class AvailabilityService {
 
 
     @Transactional
-    public void getDayOff(Long doctorId, Date date, Integer hourId) {
+    public void getDayOff(Long doctorId, Date date, Integer hourFrom, Integer hourTo) {
         AvailabilityDay avail = availabilityRespository.findByAvailabilityDayEquals(date);
         if (avail == null) {
             avail = new AvailabilityDay();
+            avail.setAvailabilityDay(DateUtil.format(date));
             avail.setAvailabilityHours(new ArrayList<>());
         }
         Doctor doctor = doctorRepository.findOne(doctorId);
         avail.setDoctor(doctor);
-        avail.getAvailabilityHours().add(new AvailabilityHours(null, 1, 6, null));
+        avail.getAvailabilityHours().add(new AvailabilityHours(null, hourFrom, hourTo, null));
         availabilityRespository.save(avail);
     }
 }

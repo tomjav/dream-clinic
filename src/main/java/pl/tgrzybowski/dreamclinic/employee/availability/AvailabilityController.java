@@ -23,7 +23,7 @@ public class AvailabilityController {
 
     @RequestMapping(value = "/doctor/{doctorId}/availability/hours", method = RequestMethod.POST)
     public void getDayOff(@PathVariable Long doctorId, @RequestBody DayOffDto dto) {
-        availabilityService.getDayOff(doctorId, dto.getDate(), dto.getHourId());
+        availabilityService.getDayOff(doctorId, dto.getDate(), dto.getHourFrom(), dto.getHourTo());
     }
 
 
