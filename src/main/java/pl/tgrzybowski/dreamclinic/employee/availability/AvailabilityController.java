@@ -2,6 +2,7 @@ package pl.tgrzybowski.dreamclinic.employee.availability;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import pl.tgrzybowski.dreamclinic.employee.availability.api.DayOffDto;
 import pl.tgrzybowski.dreamclinic.employee.availability.api.WorkingDayDto;
 import pl.tgrzybowski.dreamclinic.employee.availability.api.WorkingHour;
 import pl.tgrzybowski.dreamclinic.employee.availability.data.AvailabilityHours;
@@ -19,6 +20,11 @@ public class AvailabilityController {
 
     @Autowired
     private AvailabilityService availabilityService;
+
+    @RequestMapping(value = "/doctor/{doctorId}/availability/hours", method = RequestMethod.POST)
+    public void getDayOff(@PathVariable Long doctorId, @RequestBody DayOffDto dto) {
+        availabilityService.getDayOff(doctorId, dto.getDate(), dto.getHourId());
+    }
 
 
     @RequestMapping(value = "/doctor/{doctorId}/availability/workingdays", method = RequestMethod.GET)

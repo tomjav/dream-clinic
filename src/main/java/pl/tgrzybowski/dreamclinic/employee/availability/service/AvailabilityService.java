@@ -5,11 +5,16 @@ import org.springframework.stereotype.Service;
 import pl.tgrzybowski.dreamclinic.employee.availability.api.HourStatus;
 import pl.tgrzybowski.dreamclinic.employee.availability.api.WorkingDayDto;
 import pl.tgrzybowski.dreamclinic.employee.availability.api.WorkingHour;
-import pl.tgrzybowski.dreamclinic.employee.availability.data.AvailabilityDayRespository;
+import pl.tgrzybowski.dreamclinic.employee.availability.data.AvailabilityDay;
+import pl.tgrzybowski.dreamclinic.employee.availability.data.AvailabilityDayRepository;
 import pl.tgrzybowski.dreamclinic.employee.availability.data.AvailabilityHours;
+import pl.tgrzybowski.dreamclinic.employee.doctor.data.Doctor;
+import pl.tgrzybowski.dreamclinic.employee.doctor.services.DoctorRepository;
 
+import javax.transaction.Transactional;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -19,10 +24,13 @@ import java.util.stream.Collectors;
 public class AvailabilityService {
 
     @Autowired
-    private AvailabilityDayRespository availabilityRespository;
+    private AvailabilityDayRepository availabilityRespository;
 
     @Autowired
     private DefaultAvailabilityService defaultAvailabilityService;
+
+    @Autowired
+    private DoctorRepository doctorRepository;
 
     public List<WorkingHour> getWorkingHoursList(Long doctorId, Date date) {
         List<AvailabilityHours> workingHours = availabilityRespository.getWorkingHours(date);
@@ -109,4 +117,16 @@ public class AvailabilityService {
     }
 
 
+    @Transactional
+    public void getDayOff(Long doctorId, Date date, Integer hourId) {
+        AvailabilityDay avail = availabilityRespository.findByAvailabilityDayEquals(date);
+        if (avail == null) {
+            avail = new AvailabilityDay();
+            avail.setAvailabilityHours(new ArrayList<>());
+        }
+        Doctor doctor = doctorRepository.findOne(doctorId);
+        avail.setDoctor(doctor);
+        avail.getAvailabilityHours().add(new AvailabilityHours(null, 1, 6, null));
+        availabilityRespository.save(avail);
+    }
 }

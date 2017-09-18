@@ -14,6 +14,12 @@ public class DoctorService {
 
     public List<Doctor> getDoctors(){
 
-        return doctorRepository.findAll();
+//        return doctorRepository.findAll();
+        return null;
     }
+
+    public List<Doctor> getDoctorWithSpeciality(Long specialityId) {
+        return doctorRepository.findAllBySpeciality(specialityId);
+    }
+
 }

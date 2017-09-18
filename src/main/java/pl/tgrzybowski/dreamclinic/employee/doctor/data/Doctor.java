@@ -1,12 +1,16 @@
 package pl.tgrzybowski.dreamclinic.employee.doctor.data;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import pl.tgrzybowski.dreamclinic.employee.availability.data.AvailabilityDay;
+import lombok.Data;
+import pl.tgrzybowski.dreamclinic.employee.doctor.api.DoctorDto;
 import pl.tgrzybowski.dreamclinic.shared.PersonalData;
 
-import javax.persistence.*;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 @Entity
+@Data
 public class Doctor {
     @Id
     private Long id;
@@ -14,4 +18,10 @@ public class Doctor {
     private PersonalData personalData;
     @ManyToOne
     private Speciality speciality;
+
+    private String img;
+
+    public DoctorDto toDto() {
+        return new DoctorDto(id, personalData.getName(), personalData.getSurname(), speciality.getId(), speciality.getName(), img);
+    }
 }
