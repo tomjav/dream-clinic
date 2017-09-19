@@ -7,5 +7,6 @@ public class AppointmentCreateDto {
     private Long doctorId;
     private Long patientId;
     private Long dayId;
-    private Long hourId;
+    private Long hourFrom;
+    private Long hourTo;
 }

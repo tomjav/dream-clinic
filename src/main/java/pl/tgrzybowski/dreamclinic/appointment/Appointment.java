@@ -1,7 +1,7 @@
 package pl.tgrzybowski.dreamclinic.appointment;
 
-import pl.tgrzybowski.dreamclinic.Patient;
 import pl.tgrzybowski.dreamclinic.employee.doctor.data.Doctor;
+import pl.tgrzybowski.dreamclinic.patient.Patient;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
