@@ -46,14 +46,12 @@ public class RegisterService {
 
     @Transactional
     public void registerDoctor(RegisterDoctor dto) {
+        Role role = roleRepository.findByRole("DOCTOR");
         Account account = getAccount(dto);
-        Role role = new Role();
-//    role.setId(1L);
-        role.setRole("ROLE_DOCTOR");
-//    account.setId(1L);
         account.setRole(role);
         Doctor doctor = new Doctor();
-//    doctor.setId(1L);
+        PersonalData personalData = new PersonalData(dto.getName(), dto.getSurname(), null, null);
+        doctor.setPersonalData(personalData);
         doctor.setAccount(account);
         doctorRepository.save(doctor);
     }
