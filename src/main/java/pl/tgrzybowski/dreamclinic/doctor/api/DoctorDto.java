@@ -12,4 +12,5 @@ public class DoctorDto {
     private Long specialityId;
     private String speciality;
     private String img;
+    private String title;
 }

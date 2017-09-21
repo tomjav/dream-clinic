@@ -12,10 +12,8 @@ public class DoctorService {
     @Autowired
     private DoctorRepository doctorRepository;
 
-    public List<Doctor> getDoctors(){
-
-//        return doctorRepository.findAll();
-        return null;
+    public Doctor getDoctorInfo(Long id) {
+        return doctorRepository.findOne(id);
     }
 
     public List<Doctor> getDoctorWithSpeciality(Long specialityId) {

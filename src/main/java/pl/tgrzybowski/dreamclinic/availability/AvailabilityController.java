@@ -10,6 +10,7 @@ import pl.tgrzybowski.dreamclinic.doctor.services.DoctorRepository;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -50,6 +51,8 @@ public class AvailabilityController {
     public List<ProposeAppointmentDto> getProposeAppointmentDto(@RequestParam Long specialityId,
                                                                 @ModelAttribute FilterDto filter) {
 
-        return availabilityService.getAvailabilityDoctorInTime(specialityId, filter);
+        List<ProposeAppointmentDto> result = availabilityService.getAvailabilityDoctorInTime(specialityId, filter);
+        result.sort(Comparator.comparing(ProposeAppointmentDto::getDate).thenComparing(ProposeAppointmentDto::getFrom));
+        return result;
     }
 }

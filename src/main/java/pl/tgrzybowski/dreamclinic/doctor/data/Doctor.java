@@ -1,8 +1,8 @@
 package pl.tgrzybowski.dreamclinic.doctor.data;
 
 import lombok.Data;
-import pl.tgrzybowski.dreamclinic.register.entity.Account;
 import pl.tgrzybowski.dreamclinic.doctor.api.DoctorDto;
+import pl.tgrzybowski.dreamclinic.register.entity.Account;
 import pl.tgrzybowski.dreamclinic.shared.PersonalData;
 
 import javax.persistence.*;
@@ -25,7 +25,10 @@ public class Doctor {
 
     private String img;
 
+    private String title;
+
     public DoctorDto toDto() {
-        return new DoctorDto(id, personalData.getName(), personalData.getSurname(), speciality.getId(), speciality.getName(), img);
+        return new DoctorDto(id, personalData.getName(), personalData.getSurname(),
+                speciality.getId(), speciality.getName(), img, title);
     }
 }
