@@ -16,10 +16,10 @@ public class Appointment {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private Doctor doctor;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private Patient patient;
 
     private String reason;
@@ -41,6 +41,13 @@ public class Appointment {
         dto.setDoctorId(this.getDoctor().getId());
         dto.setHourFrom(this.getHourFrom());
         dto.setHourTo(this.getHourTo());
+
+        dto.setDoctorName(this.getDoctor().getPersonalData().getName());
+        dto.setDoctorSurname(this.getDoctor().getPersonalData().getSurname());
+
+        dto.setPatientName(this.getPatient().getPersonalData().getName());
+        dto.setPatientSurname(this.getPatient().getPersonalData().getSurname());
+        dto.setSpeciality(this.getDoctor().getSpeciality().getName());
         return dto;
     }
 }
