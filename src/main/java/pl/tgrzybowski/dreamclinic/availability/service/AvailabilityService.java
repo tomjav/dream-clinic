@@ -1,18 +1,17 @@
-package pl.tgrzybowski.dreamclinic.employee.availability.service;
+package pl.tgrzybowski.dreamclinic.availability.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pl.tgrzybowski.dreamclinic.appointment.Appointment;
+import pl.tgrzybowski.dreamclinic.appointment.AppointmentRepository;
+import pl.tgrzybowski.dreamclinic.availability.api.*;
+import pl.tgrzybowski.dreamclinic.availability.data.Availability;
+import pl.tgrzybowski.dreamclinic.availability.data.AvailabilityRepository;
 import pl.tgrzybowski.dreamclinic.common.DateUtil;
-import pl.tgrzybowski.dreamclinic.employee.availability.api.HourStatus;
-import pl.tgrzybowski.dreamclinic.employee.availability.api.WorkingDayDto;
-import pl.tgrzybowski.dreamclinic.employee.availability.api.WorkingHour;
-import pl.tgrzybowski.dreamclinic.employee.availability.data.AvailabilityDay;
-import pl.tgrzybowski.dreamclinic.employee.availability.data.AvailabilityDayRepository;
-import pl.tgrzybowski.dreamclinic.employee.availability.data.AvailabilityHours;
-import pl.tgrzybowski.dreamclinic.employee.doctor.data.Doctor;
-import pl.tgrzybowski.dreamclinic.employee.doctor.services.DoctorRepository;
+import pl.tgrzybowski.dreamclinic.doctor.api.DoctorDto;
+import pl.tgrzybowski.dreamclinic.doctor.data.Doctor;
+import pl.tgrzybowski.dreamclinic.doctor.services.DoctorRepository;
 
-import javax.transaction.Transactional;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -25,16 +24,44 @@ import java.util.stream.Collectors;
 public class AvailabilityService {
 
     @Autowired
-    private AvailabilityDayRepository availabilityRespository;
+    private AvailabilityRepository availabilityRepository;
 
     @Autowired
     private DefaultAvailabilityService defaultAvailabilityService;
 
     @Autowired
+    private AppointmentRepository appointmentRepository;
+
+    @Autowired
     private DoctorRepository doctorRepository;
 
+
+    public List<ProposeAppointmentDto> getAvailabilityDoctorInTime(Long specialityId, FilterDto filter) {
+
+        Date dateFrom = DateUtil.parseDate(filter.getDateFrom());
+        Date dateTo = DateUtil.parseDate(filter.getDateTo());
+
+        List<Doctor> doctor = doctorRepository.findAllBySpeciality(specialityId);
+
+        List<ProposeAppointmentDto> output = new ArrayList<>();
+
+        doctor.forEach(e -> output.addAll(availabilityRepository.
+                findAllByDoctorAndDateBetweenAndHourFromGreaterThanEqualAndHourToLessThanEqual
+                        (e, dateFrom, dateTo, filter.getFrom(), filter.getTo())
+                .stream().map(r -> {
+                    DoctorDto doctorDto = r.getDoctor().toDto();
+                    return new ProposeAppointmentDto(doctorDto, r.getDate(), r.getHourFrom(), r.getHourTo());
+
+                }).collect(Collectors.toList())
+        ));
+
+        return output;
+    }
+
+
     public List<WorkingHour> getWorkingHoursList(Long doctorId, Date date) {
-        List<AvailabilityHours> workingHours = availabilityRespository.getWorkingHours(date);
+        Doctor doctor = doctorRepository.findOne(doctorId);
+        List<Availability> workingHours = availabilityRepository.findAllByDateAndDoctor(date, doctor);
 
         List<WorkingHour> defaultWorkingHours = defaultAvailabilityService.getDefaultWorkingHours();
 
@@ -50,12 +77,6 @@ public class AvailabilityService {
             return -1;
         });
         return mergedHours;
-    }
-
-
-    public List<WorkingHour> getAvailabilityObjects(Long doctorId, Integer month) {
-        List<WorkingHour> availabilityDays = availabilityRespository.zz(doctorId);
-        return availabilityDays;
     }
 
     public List<WorkingDayDto> getDoctorAvailabilityCalendar(Long doctorId, Integer year, Integer month) {
@@ -115,20 +136,5 @@ public class AvailabilityService {
         availabilityDays.addAll(0, missedDays);
 
         return availabilityDays;
-    }
-
-
-    @Transactional
-    public void getDayOff(Long doctorId, Date date, Integer hourFrom, Integer hourTo) {
-        AvailabilityDay avail = availabilityRespository.findByAvailabilityDayEquals(date);
-        if (avail == null) {
-            avail = new AvailabilityDay();
-            avail.setAvailabilityDay(DateUtil.format(date));
-            avail.setAvailabilityHours(new ArrayList<>());
-        }
-        Doctor doctor = doctorRepository.findOne(doctorId);
-        avail.setDoctor(doctor);
-        avail.getAvailabilityHours().add(new AvailabilityHours(null, hourFrom, hourTo, null));
-        availabilityRespository.save(avail);
     }
 }

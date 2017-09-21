@@ -1,8 +1,6 @@
-package pl.tgrzybowski.dreamclinic.employee.availability.api;
+package pl.tgrzybowski.dreamclinic.availability.api;
 
 import lombok.Data;
-
-import java.time.DayOfWeek;
 
 @Data
 public class WorkingDayDto {

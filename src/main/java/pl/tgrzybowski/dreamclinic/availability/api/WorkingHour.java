@@ -1,4 +1,4 @@
-package pl.tgrzybowski.dreamclinic.employee.availability.api;
+package pl.tgrzybowski.dreamclinic.availability.api;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

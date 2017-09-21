@@ -1,6 +1,7 @@
 package pl.tgrzybowski.dreamclinic.appointment;
 
-import pl.tgrzybowski.dreamclinic.employee.doctor.data.Doctor;
+import lombok.Data;
+import pl.tgrzybowski.dreamclinic.doctor.data.Doctor;
 import pl.tgrzybowski.dreamclinic.patient.Patient;
 
 import javax.persistence.Entity;
@@ -9,6 +10,7 @@ import javax.persistence.ManyToOne;
 import java.util.Date;
 
 @Entity
+@Data
 public class Appointment {
 
     @Id
@@ -21,6 +23,13 @@ public class Appointment {
     private Patient patient;
 
     private String reason;
+    private String comment;
+    private String symptom;
 
     private Date date;
+
+    private Integer hourFrom;
+    private Integer hourTo;
+
+
 }

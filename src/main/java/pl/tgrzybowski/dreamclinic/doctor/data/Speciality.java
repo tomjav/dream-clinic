@@ -1,4 +1,4 @@
-package pl.tgrzybowski.dreamclinic.employee.doctor.data;
+package pl.tgrzybowski.dreamclinic.doctor.data;
 
 import lombok.Data;
 

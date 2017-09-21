@@ -1,10 +1,9 @@
-package pl.tgrzybowski.dreamclinic.employee.doctor.services;
+package pl.tgrzybowski.dreamclinic.doctor.services;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
-import pl.tgrzybowski.dreamclinic.employee.doctor.data.Doctor;
-import pl.tgrzybowski.dreamclinic.patient.Patient;
+import pl.tgrzybowski.dreamclinic.doctor.data.Doctor;
 
 import java.util.List;
 

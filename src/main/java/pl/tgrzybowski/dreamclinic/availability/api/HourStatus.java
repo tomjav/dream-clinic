@@ -1,4 +1,4 @@
-package pl.tgrzybowski.dreamclinic.employee.availability.api;
+package pl.tgrzybowski.dreamclinic.availability.api;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,7 +7,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum HourStatus {
 
-    FREE(1), APPOINTMENT(2), HOUR_OFF(3);
+    FREE_TIME(1), APPOINTMENT(2), HOUR_OFF(3);
 
     Integer id;
 }

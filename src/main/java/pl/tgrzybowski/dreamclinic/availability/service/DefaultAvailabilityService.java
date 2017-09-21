@@ -1,8 +1,8 @@
-package pl.tgrzybowski.dreamclinic.employee.availability.service;
+package pl.tgrzybowski.dreamclinic.availability.service;
 
 import org.springframework.stereotype.Service;
-import pl.tgrzybowski.dreamclinic.employee.availability.api.HourStatus;
-import pl.tgrzybowski.dreamclinic.employee.availability.api.WorkingHour;
+import pl.tgrzybowski.dreamclinic.availability.api.HourStatus;
+import pl.tgrzybowski.dreamclinic.availability.api.WorkingHour;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -18,7 +18,7 @@ public class DefaultAvailabilityService {
                 status = HourStatus.HOUR_OFF;
             } else {
                 if (i < 17) {
-                    status = HourStatus.FREE;
+                    status = HourStatus.FREE_TIME;
                 } else {
                     status = HourStatus.HOUR_OFF;
                 }
