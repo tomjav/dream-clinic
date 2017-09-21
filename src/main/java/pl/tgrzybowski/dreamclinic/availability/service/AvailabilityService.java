@@ -50,7 +50,7 @@ public class AvailabilityService {
                         (e, dateFrom, dateTo, filter.getFrom(), filter.getTo())
                 .stream().map(r -> {
                     DoctorDto doctorDto = r.getDoctor().toDto();
-                    return new ProposeAppointmentDto(doctorDto, r.getDate(), r.getHourFrom(), r.getHourTo());
+                    return new ProposeAppointmentDto(doctorDto, r.getDate(), r.getHourFrom(), r.getHourTo(), r.getId());
 
                 }).collect(Collectors.toList())
         ));

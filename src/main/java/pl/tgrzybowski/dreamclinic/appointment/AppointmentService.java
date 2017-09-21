@@ -3,6 +3,7 @@ package pl.tgrzybowski.dreamclinic.appointment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.tgrzybowski.dreamclinic.appointment.api.AppointmentCreateDto;
+import pl.tgrzybowski.dreamclinic.availability.data.AvailabilityRepository;
 import pl.tgrzybowski.dreamclinic.common.DateUtil;
 import pl.tgrzybowski.dreamclinic.availability.api.FilterDto;
 import pl.tgrzybowski.dreamclinic.doctor.data.Doctor;
@@ -10,6 +11,7 @@ import pl.tgrzybowski.dreamclinic.doctor.services.DoctorRepository;
 import pl.tgrzybowski.dreamclinic.patient.Patient;
 import pl.tgrzybowski.dreamclinic.patient.PatientRepository;
 
+import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
 
@@ -25,6 +27,10 @@ public class AppointmentService {
     @Autowired
     private AppointmentRepository appointmentRepository;
 
+    @Autowired
+    private AvailabilityRepository availabilityRepository;
+
+    @Transactional
     public void createAppointment(AppointmentCreateDto dto) {
         Patient patient = patientRepository.findOne(dto.getPatientId());
         Doctor doctor = doctorRepository.findOne(dto.getDoctorId());
@@ -36,6 +42,8 @@ public class AppointmentService {
         appointment.setHourFrom(dto.getHourFrom());
         appointment.setHourTo(dto.getHourTo());
         appointment.setReason(dto.getReason());
+
+        availabilityRepository.delete(dto.getId());
 
         appointmentRepository.save(appointment);
     }

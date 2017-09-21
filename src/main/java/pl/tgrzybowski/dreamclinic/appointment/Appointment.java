@@ -4,9 +4,7 @@ import lombok.Data;
 import pl.tgrzybowski.dreamclinic.doctor.data.Doctor;
 import pl.tgrzybowski.dreamclinic.patient.Patient;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.util.Date;
 
 @Entity
@@ -14,6 +12,7 @@ import java.util.Date;
 public class Appointment {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @ManyToOne

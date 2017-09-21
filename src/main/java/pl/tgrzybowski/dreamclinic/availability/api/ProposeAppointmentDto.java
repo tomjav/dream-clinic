@@ -18,4 +18,5 @@ public class ProposeAppointmentDto {
     private Date date;
     private Integer from;
     private Integer to;
+    private Long availabilityId;
 }

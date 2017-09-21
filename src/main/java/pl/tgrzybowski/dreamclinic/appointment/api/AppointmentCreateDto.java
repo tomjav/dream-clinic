@@ -15,4 +15,6 @@ public class AppointmentCreateDto {
     private String reason;
     private String comment;
     private String symptom;
+
+    private Long id;
 }
