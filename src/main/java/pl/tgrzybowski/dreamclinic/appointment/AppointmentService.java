@@ -14,6 +14,7 @@ import pl.tgrzybowski.dreamclinic.patient.PatientRepository;
 import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AppointmentService {
@@ -56,5 +57,27 @@ public class AppointmentService {
         List<Appointment> appointments = appointmentRepository.getAppointmentDoctor(doctorId, dateFrom,
                 dateTo, filter.getFrom(), filter.getTo());
         return appointments;
+    }
+
+    public List<AppointmentCreateDto> getPatientAppoitment(Long patientId, Integer scope) {
+
+        Patient patient = patientRepository.findOne(patientId);
+
+        List<Appointment> result = null;
+        switch (scope) {
+            case 1: {
+                result = appointmentRepository.findAllByPatientEqualsAndDateGreaterThan(patient, new Date());
+                break;
+            }
+            case 2: {
+                result = appointmentRepository.findAllByPatientEqualsAndDateLessThan(patient, new Date());
+                break;
+            }
+            case 3: {
+                result = appointmentRepository.findAllByPatientEquals(patient);
+                break;
+            }
+        }
+        return result.stream().map(Appointment::toDto).collect(Collectors.toList());
     }
 }

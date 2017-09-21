@@ -24,4 +24,11 @@ public class AppointmentController {
     public List<Appointment> createAppointment(@PathVariable Long doctorId, @ModelAttribute FilterDto dto) {
         return appointmentService.getAppointmentDoctorInTime(doctorId, dto);
     }
+
+
+    @GetMapping("/appointment/patient/{patientId}")
+    public List<AppointmentCreateDto> getPatientAppointment(@PathVariable Long patientId,
+                                                            @RequestParam Integer scope) {
+        return appointmentService.getPatientAppoitment(patientId, scope);
+    }
 }
