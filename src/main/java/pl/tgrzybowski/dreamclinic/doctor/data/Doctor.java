@@ -29,7 +29,7 @@ public class Doctor {
 
     public DoctorDto toDto() {
         return new DoctorDto(id, personalData.getName(), personalData.getSurname(),
-                speciality.getId(), speciality.getName(), img, title);
+                speciality != null ? speciality.getId() : null, speciality != null ? speciality.getName() : null, img, title, email);
     }
 
     private String email;
