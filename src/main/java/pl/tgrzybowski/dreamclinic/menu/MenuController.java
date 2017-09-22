@@ -25,10 +25,11 @@ public class MenuController {
 
         switch (role) {
             case "PATIENT": {
-                return Arrays.asList(new Para("/specialities", "Umów wizytę"), new Para("/appointment", "Wizyty"));
+                return Arrays.asList(new Para("/specialities", "Umów wizytę"), new Para("/appointment", "Moje Wizyty"));
             }
             case "DOCTOR": {
-                return Arrays.asList(new Para("/availability", "Kalendarz"));
+                return Arrays.asList(new Para("/availability", "Kalendarz"),
+                        new Para("/myday", "Mój dzień"), new Para("/doctor/appoitment", "Wizyty"));
             }
             case "ADMIN": {
                 return Arrays.asList(new Para("/admin/panel", "Panel Admina"));
