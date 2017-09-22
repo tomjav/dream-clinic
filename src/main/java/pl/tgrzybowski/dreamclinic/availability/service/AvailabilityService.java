@@ -12,13 +12,16 @@ import pl.tgrzybowski.dreamclinic.doctor.api.DoctorDto;
 import pl.tgrzybowski.dreamclinic.doctor.data.Doctor;
 import pl.tgrzybowski.dreamclinic.doctor.services.DoctorRepository;
 
+import javax.transaction.Transactional;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class AvailabilityService {
@@ -61,16 +64,28 @@ public class AvailabilityService {
 
     public List<WorkingHour> getWorkingHoursList(Long doctorId, Date date) {
         Doctor doctor = doctorRepository.findOne(doctorId);
-        List<Availability> workingHours = availabilityRepository.findAllByDateAndDoctor(date, doctor);
+        List<Availability> workingHours = availabilityRepository.findAllByDoctorEqualsAndDateEquals(doctor, date);
+
+        List<Appointment> doctorAppointments = appointmentRepository.findAllByDoctorEqualsAndDateEquals(doctor, date);
 
         List<WorkingHour> defaultWorkingHours = defaultAvailabilityService.getDefaultWorkingHours();
 
         List<WorkingHour> urgentHours =
-                workingHours.stream().map(e -> new WorkingHour(e.getHourFrom(), e.getHourTo(), HourStatus.HOUR_OFF)).collect(Collectors.toList());
+                workingHours.stream().map(e -> new WorkingHour(e.getHourFrom(), e.getHourTo(), HourStatus.FREE_TIME)).collect(Collectors.toList());
 
-        List<WorkingHour> mergedHours = defaultWorkingHours.stream().filter(e -> urgentHours.stream().noneMatch(p -> e.getFrom().equals(p.getFrom()))).collect(Collectors.toList());
+        List<WorkingHour> appointmentHours =
+                doctorAppointments.stream().map(e -> new WorkingHour(e.getHourFrom(), e.getHourTo(), HourStatus.APPOINTMENT)).collect(Collectors.toList());
+
+        List<WorkingHour> mergedHours =
+                defaultWorkingHours.stream().filter(e -> urgentHours.stream().noneMatch(p -> e.getFrom().equals(p.getFrom()))).collect(Collectors.toList());
+
+        mergedHours = mergedHours.stream()
+                .filter(e -> appointmentHours.stream()
+                        .noneMatch(p -> e.getFrom().equals(p.getFrom())))
+                .collect(Collectors.toList());
 
         mergedHours.addAll(urgentHours);
+        mergedHours.addAll(appointmentHours);
         mergedHours.sort((e, p) -> {
             if (e.getFrom().equals(p.getFrom())) return 0;
             else if (e.getFrom() > p.getFrom()) return 1;
@@ -136,5 +151,16 @@ public class AvailabilityService {
         availabilityDays.addAll(0, missedDays);
 
         return availabilityDays;
+    }
+
+    @Transactional
+    public void addAvailabilityHour(Long doctorId, Date date, Integer hourFrom, Integer hourTo) {
+        Doctor doctor = doctorRepository.findOne(doctorId);
+        Availability availability = new Availability();
+        availability.setDate(DateUtil.format(date));
+        availability.setDoctor(doctor);
+        availability.setHourFrom(hourFrom);
+        availability.setHourTo(hourTo);
+        availabilityRepository.save(availability);
     }
 }

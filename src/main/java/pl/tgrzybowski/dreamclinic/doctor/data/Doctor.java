@@ -31,4 +31,6 @@ public class Doctor {
         return new DoctorDto(id, personalData.getName(), personalData.getSurname(),
                 speciality.getId(), speciality.getName(), img, title);
     }
+
+    private String email;
 }

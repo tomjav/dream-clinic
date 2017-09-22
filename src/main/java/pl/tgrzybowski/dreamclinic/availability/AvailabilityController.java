@@ -29,7 +29,7 @@ public class AvailabilityController {
 
     @RequestMapping(value = "/doctor/{doctorId}/availability/hours", method = RequestMethod.POST)
     public void getDayOff(@PathVariable Long doctorId, @RequestBody DayOffDto dto) {
-//        availabilityService.getDayOff(doctorId, dto.getDate(), dto.getHourFrom(), dto.getHourTo());
+        availabilityService.addAvailabilityHour(doctorId, dto.getDate(), dto.getHourFrom(), dto.getHourTo());
     }
 
     @RequestMapping(value = "/doctor/{doctorId}/availability/hours", method = RequestMethod.GET)
@@ -38,6 +38,7 @@ public class AvailabilityController {
         Date zp = s.parse(date);
         return availabilityService.getWorkingHoursList(doctorId, zp);
     }
+
     @RequestMapping(value = "/doctor/{doctorId}/availability/workingdays", method = RequestMethod.GET)
     public List<WorkingDayDto> getWorkingDays(@PathVariable Long doctorId,
                                               @RequestParam(value = "year", required = false) Integer year,

@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import pl.tgrzybowski.dreamclinic.doctor.data.Doctor;
 import pl.tgrzybowski.dreamclinic.patient.Patient;
 
 import java.util.Date;
@@ -22,4 +23,6 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
     List<Appointment> findAllByPatientEqualsAndDateLessThan(Patient patient, Date date);
 
     List<Appointment> findAllByPatientEquals(Patient patient);
+
+    List<Appointment> findAllByDoctorEqualsAndDateEquals(Doctor doctor, Date date);
 }

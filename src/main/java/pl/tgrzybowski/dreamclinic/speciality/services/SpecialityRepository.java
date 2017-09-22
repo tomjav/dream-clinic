@@ -6,4 +6,6 @@ import pl.tgrzybowski.dreamclinic.doctor.data.Speciality;
 
 @RestController
 public interface SpecialityRepository extends JpaRepository<Speciality, Long> {
+
+    Speciality findByNameEquals(String name);
 }

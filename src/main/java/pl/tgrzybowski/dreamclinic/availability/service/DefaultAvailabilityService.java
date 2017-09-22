@@ -12,18 +12,8 @@ public class DefaultAvailabilityService {
 
     public List<WorkingHour> getDefaultWorkingHours() {
         List<WorkingHour> output = new LinkedList<>();
-        HourStatus status;
         for (int i = 7; i < 20; i++) {
-            if (i == 7) {
-                status = HourStatus.HOUR_OFF;
-            } else {
-                if (i < 17) {
-                    status = HourStatus.FREE_TIME;
-                } else {
-                    status = HourStatus.HOUR_OFF;
-                }
-            }
-            output.add(new WorkingHour(i, i + 1, status));
+            output.add(new WorkingHour(i, i + 1, HourStatus.HOUR_OFF));
         }
         return output;
     }

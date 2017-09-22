@@ -3,10 +3,7 @@ package pl.tgrzybowski.dreamclinic.availability.data;
 import lombok.Data;
 import pl.tgrzybowski.dreamclinic.doctor.data.Doctor;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.util.Date;
 
 @Entity
@@ -14,6 +11,7 @@ import java.util.Date;
 public class Availability {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     private Integer hourFrom;

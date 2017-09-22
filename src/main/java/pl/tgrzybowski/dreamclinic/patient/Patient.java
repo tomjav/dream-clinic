@@ -20,4 +20,6 @@ public class Patient {
 
     @OneToOne(cascade = CascadeType.ALL)
     private Account account;
+
+    private String email;
 }

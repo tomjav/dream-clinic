@@ -13,5 +13,5 @@ public interface AvailabilityRepository extends JpaRepository<Availability, Long
     List<Availability> findAllByDoctorAndDateBetweenAndHourFromGreaterThanEqualAndHourToLessThanEqual
             (Doctor doctor, Date dateFrom, Date dateTo, Integer hourFrom, Integer hourTo);
 
-    List<Availability> findAllByDateAndDoctor(Date date, Doctor doctor);
+    List<Availability> findAllByDoctorEqualsAndDateEquals(Doctor doctor, Date date);
 }
